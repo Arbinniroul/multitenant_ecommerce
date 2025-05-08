@@ -13,7 +13,7 @@ export default async function Home() {
       config: configPromise,
     })
     const data = await payload.find({
-      collection:"users",
+      collection:"categories",
     })
   
   return (
