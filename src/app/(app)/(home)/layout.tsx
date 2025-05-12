@@ -6,6 +6,7 @@ import SearchFilters from './search-filters';
 import configPromise from "@payload-config";
 import { getPayload } from "payload";
 import {Category} from "@/payload-types"
+import { CustomCategory } from './types';
  interface layoutProps{
     children:React.ReactNode;
  }
@@ -22,9 +23,10 @@ const Layout =async ({children}:layoutProps) => {
           parent:{
             exists:false,
           }
-        }
+        },
+        sort:'name'
       })
-      const formattedData=data.docs.map((doc)=>
+      const formattedData:CustomCategory[]=data.docs.map((doc)=>
     (  {
         ...doc,
         subcategories:(doc.subcategories?.docs??[]).map((doc)=>({
@@ -34,8 +36,7 @@ const Layout =async ({children}:layoutProps) => {
         }))
 
       }))
-      console.log("formattedData",formattedData)
-      console.log("data",data)
+  
   return (
     <div className='flex flex-col min-h-screen '>
         <Navbar/>
