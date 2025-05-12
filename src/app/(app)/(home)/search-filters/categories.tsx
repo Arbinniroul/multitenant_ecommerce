@@ -7,9 +7,10 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { ListFilterIcon } from 'lucide-react';
 import { CategoriesSidebar } from './categories-sidebar';
+import { CategoriesGetManyOutput } from '@/modules/categories/types';
 
 interface CategoriesProps {
-    data?: CustomCategory[];
+    data?: CategoriesGetManyOutput;
 }
 
 const Categories = ({ data = [] }: CategoriesProps) => {
@@ -66,7 +67,7 @@ const Categories = ({ data = [] }: CategoriesProps) => {
     <div className='relative w-full' >
 
       {/* Categories sidebar */}
-     <CategoriesSidebar open={isSidebarOpen} onOpenChange={setIsSidebarOpen} data={data}/>
+     <CategoriesSidebar open={isSidebarOpen} onOpenChange={setIsSidebarOpen} />
       {/* Hidden measurement container */}
       <div 
         ref={measureRef} 
