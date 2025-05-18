@@ -56,10 +56,10 @@ export const Navbar = () => {
      </div>
      <div className='hidden lg:flex'>
         <Button asChild variant={'secondary'} className='border-l borderr-t-0 border-b-0 border-r-0 px-12 h-full rounded-none bg-white hover:bg-pink-500 transition-colors text-lg'>
-            <Link href={'/sign-in'}>Log in</Link>
+            <Link  prefetch  href={'/sign-in'}>Log in</Link>
         </Button>
         <Button asChild variant={'secondary'} className='border-l borderr-t-0 border-b-0 bg-black border-r-0 px-12 h-full text-white rounded-none  hover:text-black transition-colors text-lg'>
-            <Link href={'/login'}>Start Selling</Link>
+            <Link prefetch href={'/sign-up'}>Start Selling</Link>
         </Button>
 
 

@@ -2,7 +2,6 @@
 
 import React, { useEffect, useRef, useState } from 'react'
 import { CategoryDropDown } from './category-dropDown';
-import { CustomCategory } from '../types';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { ListFilterIcon } from 'lucide-react';
@@ -23,8 +22,8 @@ const Categories = ({ data = [] }: CategoriesProps) => {
   const [isSidebarOpen,setIsSidebarOpen]=useState(false);
 
   const activeCategory = "all";
-
-  const activeCategoryIndex = data.findIndex((cat) => cat.slug === activeCategory);
+  
+const activeCategoryIndex = data.findIndex((cat) => cat.slug === activeCategory);
   const isActiveCategoryHidden = activeCategoryIndex >= visibleCount && activeCategoryIndex !== -1;
 
   useEffect(() => {
@@ -61,7 +60,7 @@ const Categories = ({ data = [] }: CategoriesProps) => {
 
     return () => resizeObserver.disconnect();
   }, [data.length]);
-  console.log(visibleCount,'afterChange')
+
 
   return (
     <div className='relative w-full' >

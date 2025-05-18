@@ -51,10 +51,10 @@ export const CategoryDropDown=({category,isActive,isNavigationHovered}:Props)=>{
              category.subcategories && category.subcategories.length>0 && (
                 <div className={cn("opacity-0 absolute -bottom-3 w-0 h-0 border-r-[10px]  border-r-transparent border-l-transparent border-l-[10px] border-b-[10px] border-b-black left-1/2 -translate-x-1/2 ",
                     isOpen && "opacity-100"
-                )}>
+                )}/>
 
 
-                    </div>
+
 
             )
         }

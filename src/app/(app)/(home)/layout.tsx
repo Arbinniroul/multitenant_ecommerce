@@ -21,7 +21,7 @@ const Layout =async ({children}:layoutProps) => {
         <HydrationBoundary state={dehydrate(queryClient)}>
          <Suspense fallback={<SearchFilterSkeleton/>}>
 
-        <SearchFilters />
+        <SearchFilters /> 
         <div className='flex-1 bg-[#f4f4f0]'>
         {children}
 

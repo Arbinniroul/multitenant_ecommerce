@@ -1,9 +1,7 @@
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { CustomCategory } from "../types"
 import { useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Button } from "@/components/ui/button";
-import { ChevronLeftIcon, ChevronRightIcon, ChevronsRightIcon } from "lucide-react";
+import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTRPC } from "@/trpc/client";
 import { useQuery } from "@tanstack/react-query";
@@ -61,7 +59,7 @@ export const CategoriesSidebar=({open,onOpenChange}:Props)=>{
         }
      }
     const currentCategories=parentCategories?? data ?? []
-    console.log(data,'data')
+
     return(
         <Sheet onOpenChange={handleOpenChange} open={open}>
             <SheetContent side="left" className="p-0 transition-none" style={{backgroundColor:backgroundColor}}>
@@ -73,7 +71,7 @@ export const CategoriesSidebar=({open,onOpenChange}:Props)=>{
                 </SheetHeader>
             <ScrollArea className="flex flex-col overflow-y-auto h-full pb-2">
                 {
-               true && (
+               parentCategories && (
                 <button className="w-full text-left p-4 hover:bg-black hover:text-white flex items-center text-base font-medium" onClick={handleBackClick}>
                     <ChevronLeftIcon className="size-4 mr-2"/>
 
