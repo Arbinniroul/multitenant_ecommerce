@@ -2,13 +2,14 @@
 import { baseProcedure, createTRPCRouter } from "@/trpc/init";
 
 
-import { headers as getHeaders,cookies as getCookies } from "next/headers";
+import { headers as getHeaders } from "next/headers";
 
 
 
 import { TRPCError } from "@trpc/server";
-import { AUTH_COOKIE } from "./constants";
+
 import { loginSchema, registerSchema } from "../ui/Schema";
+import { generateAuthCookie } from "../utils";
 export const authRouter=createTRPCRouter({
     session:baseProcedure.query(async({ctx})=>{
         const headers=await getHeaders();
@@ -16,10 +17,6 @@ export const authRouter=createTRPCRouter({
         console.log(session);
 
         return session;
-    }),
-    logout:baseProcedure.mutation(async()=>{
-        const cookies=await getCookies();
-        cookies.delete(AUTH_COOKIE);
     }),
     register:baseProcedure
     .input(registerSchema)
@@ -48,6 +45,24 @@ export const authRouter=createTRPCRouter({
                 password:input.password,
             }
         })
+        const data =await ctx.db.login({
+            collection:"users",
+            data:{
+                email:input.email,
+                password:input.password,
+            }
+        })
+        if(!data.token){
+            throw new TRPCError({
+                code:"UNAUTHORIZED",
+                message:"Failed to Login",
+            })
+
+        }
+               await generateAuthCookie({
+            prefix:ctx.db.config.cookiePrefix,
+            value:data.token
+           })
     }),
     login:baseProcedure
     .input(loginSchema)
@@ -66,14 +81,10 @@ export const authRouter=createTRPCRouter({
             })
 
            }
-           const cookies=await getCookies();
-           cookies.set({
-            name:AUTH_COOKIE,
-            value:data.token,
-            httpOnly:true,
-            secure: false,
-            path:"/",
-            sameSite:'lax',
+        
+           await generateAuthCookie({
+            prefix:ctx.db.config.cookiePrefix,
+            value:data.token
            })
            return data;
 

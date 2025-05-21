@@ -4,14 +4,19 @@ interface Props{
     data?:CustomCategory[];
 }
 import { Input } from '@/components/ui/input'
-import { ListFilterIcon, SearchIcon } from 'lucide-react'
+import { BookmarkCheckIcon, ListFilterIcon, SearchIcon } from 'lucide-react'
 import React, { useState } from 'react'
 import { CustomCategory } from '../types'
 import { CategoriesSidebar } from './categories-sidebar';
 import { Button } from '@/components/ui/button';
+import { useTRPC } from '@/trpc/client';
+import { useQuery } from '@tanstack/react-query';
+import Link from 'next/link';
 
 const SearchInput = ({disabled}:Props) => {
   const [isSidebarOpen,setIsSidebarOpen]=useState(false);
+  const trpc=useTRPC();
+  const session=useQuery(trpc.auth.session.queryOptions());
   return (
     <div className='items-center gap-2 w-ful flex '>
       <CategoriesSidebar open={isSidebarOpen} onOpenChange={setIsSidebarOpen}/>
@@ -28,7 +33,14 @@ const SearchInput = ({disabled}:Props) => {
 
        </Button>
       
-       {/* TODO Add Library button */}
+       {session.data?.user &&(
+        <Button variant={"elevated"} asChild>
+          <Link href={"/library"}>
+          <BookmarkCheckIcon />
+          Library
+          </Link>
+        </Button>
+       ) }
     </div>
   )
 }

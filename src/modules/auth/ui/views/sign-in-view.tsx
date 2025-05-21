@@ -10,10 +10,11 @@ import { Poppins } from 'next/font/google'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { useTRPC } from '@/trpc/client'
-import { useMutation } from '@tanstack/react-query'
+import {  QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
+import { trpc } from '@/trpc/server'
+import { useTRPC } from '@/trpc/client'
 const poppins =Poppins({
   subsets:["latin"],
   weight:["700"]
@@ -37,13 +38,19 @@ const onSubmit=(values:z.infer <typeof loginSchema>)=>{
   login.mutate(values);
 }
 const trpc=useTRPC();
-const login=useMutation(trpc.auth.login.mutationOptions({onError:(error)=>{
+const queryClient=useQueryClient();
+const login=useMutation(trpc.auth.login.mutationOptions({
+
+   
+    
+  onError:(error)=>{
   toast.error(error.message)
 },
-onSuccess:()=>{
+onSuccess:async()=>{
+ await queryClient.invalidateQueries(trpc.auth.session.queryFilter())
   router.push("/");
 }
-}))
+}));
 
   return (
     <div className='grid grid-cols-1 lg:grid-cols-5'>
