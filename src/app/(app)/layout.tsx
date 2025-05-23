@@ -3,6 +3,7 @@ import { DM_Sans } from "next/font/google";
 import "./globals.css";
 import {  TRPCReactProvider } from "@/trpc/client";
 import {  Toaster } from "sonner";
+import { NuqsAdapter } from 'nuqs/adapters/next/app'
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -23,10 +24,13 @@ export default function RootLayout({
       <body
         className={`${dmsans.className} antialiased`}
       >
-        <TRPCReactProvider>
+        <NuqsAdapter>
+           <TRPCReactProvider>
         {children}
 <Toaster/>
         </TRPCReactProvider>
+        </NuqsAdapter>
+       
       </body>
     </html>
   );

@@ -7,10 +7,22 @@ export const productsRouter=createTRPCRouter({
     
     getMany:baseProcedure
     .input(z.object({
-        category:z.string().nullable().optional()
+        category:z.string().nullable().optional(),
+        minprice:z.string().nullable().optional(),
+        maxprice:z.string().nullable().optional(),
     }))
     .query(async({ctx,input})=>{
         const where:Where={}
+        if(input.minprice){
+            where.price={
+                greater_than_equal:input.minprice
+            }
+        }
+          if(input.maxprice){
+            where.price={
+                less_than_equal:input.maxprice
+            }
+        }
         if(input.category){
             const categoriesData=await ctx.db.find({
                 collection:'categories',
@@ -38,11 +50,11 @@ export const productsRouter=createTRPCRouter({
             const subCategoriesSlug=[];
         if(parentCategory){
             subCategoriesSlug.push(...parentCategory.subcategories.map((subcategory)=>subcategory.slug))
-           
-        }
-         where['category.slug']={
+             where['category.slug']={
                 in:[parentCategory.slug,...subCategoriesSlug]
             }
+        }
+       
         } 
 
         const data=await ctx.db.find({
