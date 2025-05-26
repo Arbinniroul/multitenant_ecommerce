@@ -118,8 +118,8 @@ const Categories = ({ data = [] }: CategoriesProps) => {
 
 <div ref={viewAllRef} className="shrink-0">
           <Button variant={'elevated'} className={cn(
-            "h-11 px-4 transparent border-transparent rounded-full hover:bg-white hover:border-primary text-black",
-            isActiveCategoryHidden && !isAnyHovered && "bg-white border-primary"
+            "h-11 px-4 bg-transparent border-transparent rounded-full  hover:border-primary text-black",
+            isActiveCategoryHidden && !isAnyHovered && " border-primary"
 
           )} onClick={()=>setIsSidebarOpen(true)}>
             View All 
