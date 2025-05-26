@@ -27,7 +27,7 @@ const SearchFilters = () => {
   const activeSubCategory=params.subcategory as string | undefined;
   const activeSubCategoryName=activeCategoryData?.subcategories?.find((subcategory)=>subcategory.slug===activeSubCategory)?.name || null;
   
-console.log(activeSubCategoryName)
+
 
 
   return (
