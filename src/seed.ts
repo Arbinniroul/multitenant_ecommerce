@@ -140,14 +140,28 @@ const categories = [
 const seed = async () => {
   const payload = await getPayload({ config });
 
-  // 1. Create admin user (with unique email)
+
   try {
+    const adminTenant=await payload.create({
+      collection: "tenants",
+      data:{
+        name:"admin",
+        slug:"admin",
+        stripeAccountId:"admin",
+      }
+    })
+
     await payload.create({
       collection: "users",
       data: {
-        email: "admin@demo.com", // Changed to ensure uniqueness
+        email: "admin@demo.com", 
         password: "demo",
         roles: ["super-admin"],
+        username: "admin",
+        tenants: [{
+          tenant: adminTenant.id,
+
+        }]
       }
     });
     console.log("✅ Admin user created");
@@ -155,25 +169,25 @@ const seed = async () => {
     console.log("⚠️ Admin user already exists or error:", err.message);
   }
 
-  // 2. Process categories ONE BY ONE
+
   for (const category of categories) {
     try {
-      // Create parent category
+  
       const parentCategory = await payload.create({
         collection: "categories",
         data: {
           name: category.name,
           slug: category.slug,
-          color: category.color || null, // Handle missing color
+          color: category.color || null,
           parent: null,
         }
       });
       console.log(`✅ Created parent category: ${category.name}`);
 
-      // Process subcategories SEQUENTIALLY
+
       if (category.subcategories) {
         for (const subCategory of category.subcategories) {
-          await new Promise(resolve => setTimeout(resolve, 100)); // 100ms delay
+          await new Promise(resolve => setTimeout(resolve, 100)); 
           await payload.create({
             collection: "categories",
             data: {
