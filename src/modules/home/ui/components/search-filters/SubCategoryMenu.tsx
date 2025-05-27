@@ -1,21 +1,20 @@
 import { Category } from '@/payload-types';
 import Link from 'next/link';
 import React from 'react'
-import { CustomCategory } from '../types';
 import { CategoriesGetManyOutput } from '@/modules/categories/types';
  interface Props{
     category:CategoriesGetManyOutput[1];
     isOpen:boolean;
-    position:{top:number;left:number}
+
  }
-const SubCategoryMenu = ({category,isOpen,position}:Props) => {
+const SubCategoryMenu = ({category,isOpen}:Props) => {
     if(!isOpen|| !category.subcategories || category.subcategories.length===0){
         return null
     }
  const backgroundColor=category.color||"#f5f5f5"
  return (
-    <div className='fixed z-10' style={{top:position.top,
-        left:position.left
+    <div className='absolute z-10' style={{top:"100%",
+        left:0
     }}>
 {/* Invisible bridge to maintain hover */}
 <div className='h-3 w-60 '/>

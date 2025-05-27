@@ -1,10 +1,11 @@
 
+import { DEFAULT_LIMIT } from '@/constants';
 import { loadProductFilter } from '@/modules/products/search-params';
 import ProductListView from '@/modules/products/ui/views/product-list-view';
 import {  getQueryClient, trpc } from '@/trpc/server';
 import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
 
-import React, { Suspense } from 'react'
+import React   from 'react'
 interface Props{
     params:Promise<{
     subcategory:string
@@ -22,9 +23,10 @@ const Page = async({params,searchParams}:Props) => {
        const filters=await loadProductFilter(searchParams);
 
     const queryClient=getQueryClient();
-    void queryClient.prefetchQuery(trpc.products.getMany.queryOptions({
-      subcategory,
-      ...filters
+    void queryClient.prefetchInfiniteQuery(trpc.products.getMany.infiniteQueryOptions ({
+      category:subcategory,
+      ...filters,
+      limit:DEFAULT_LIMIT,
 
     }))
 

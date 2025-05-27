@@ -137,36 +137,63 @@ const categories = [
   ]
 
 
-  const seed=async()=>{
-    const payload=await getPayload({config});
+const seed = async () => {
+  const payload = await getPayload({ config });
 
-
-    for(const category of categories ){
-        const parentCategory=await payload.create({
-            collection:"categories",
-            data:{
-                name:category.name,
-                slug:category.slug,
-                color:category.color,
-                parent:null,
-            }
-        })
-        for (const subCategory of category.subcategories|| []){
-            await payload.create({
-                collection:"categories",
-                data:{
-                    name:subCategory.name,
-                    slug:subCategory.slug,
-
-                    parent:parentCategory.id,
-                }
-            })
-        }
-    }
-
-
+  // 1. Create admin user (with unique email)
+  try {
+    await payload.create({
+      collection: "users",
+      data: {
+        email: "admin@demo.com", // Changed to ensure uniqueness
+        password: "demo",
+        roles: ["super-admin"],
+      }
+    });
+    console.log("✅ Admin user created");
+  } catch (err) {
+    console.log("⚠️ Admin user already exists or error:", err.message);
   }
-  await seed();
 
+  // 2. Process categories ONE BY ONE
+  for (const category of categories) {
+    try {
+      // Create parent category
+      const parentCategory = await payload.create({
+        collection: "categories",
+        data: {
+          name: category.name,
+          slug: category.slug,
+          color: category.color || null, // Handle missing color
+          parent: null,
+        }
+      });
+      console.log(`✅ Created parent category: ${category.name}`);
 
-  process.exit(0);
+      // Process subcategories SEQUENTIALLY
+      if (category.subcategories) {
+        for (const subCategory of category.subcategories) {
+          await new Promise(resolve => setTimeout(resolve, 100)); // 100ms delay
+          await payload.create({
+            collection: "categories",
+            data: {
+              name: subCategory.name,
+              slug: subCategory.slug,
+              parent: parentCategory.id,
+            }
+          });
+          console.log(`   ↳ Created subcategory: ${subCategory.name}`);
+        }
+      }
+    } catch (err) {
+      console.error(`❌ Error processing ${category.name}:`, err.message);
+    }
+  }
+};
+
+seed()
+  .then(() => process.exit(0))
+  .catch(err => {
+    console.error("Seed failed:", err);
+    process.exit(1);
+  });
