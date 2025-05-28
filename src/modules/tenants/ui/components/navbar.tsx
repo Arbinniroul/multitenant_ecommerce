@@ -5,6 +5,12 @@ import { useSuspenseQuery } from '@tanstack/react-query'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
+import dynamic from "next/dynamic";
+import { Button } from '@/components/ui/button'
+import { ShoppingCart } from 'lucide-react'
+
+const CheckOutbutton=dynamic(()=>import('@/modules/checkout/ui/components/checkout-button').then((mod)=>mod.CheckOutbutton),{ssr:false,loading:()=><Button disabled className=' bg-white'><ShoppingCart className='text-black'
+/></Button>})
 
 interface NavbarProps {
     slug: string
@@ -28,6 +34,7 @@ export const Navbar = ({ slug }: NavbarProps) => {
                     </p>
 
                 </Link>
+                <CheckOutbutton tenantSlug={slug} hideIfEmpty/>
 
 
             </div>

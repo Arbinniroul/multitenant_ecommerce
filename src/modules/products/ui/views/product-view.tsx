@@ -7,14 +7,20 @@ import { useTRPC } from "@/trpc/client"
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { LinkIcon, StarIcon } from "lucide-react";
 import Image from "next/image"
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { Fragment } from "react";
+
 //TODO add real ratings
 interface ProductViewProps {
     tenantSlug: string,
     productId: string
 }
+const CartButton=dynamic(
+    ()=>import("../components/cart.button").then((mod)=>mod.CartButton),{ssr:false,loading:()=><Button disabled className="flex-1 bg-pink-400">Add to Cart</Button>}
 
+
+)
 
 
 const ProductView = ({ tenantSlug, productId }: ProductViewProps) => {
@@ -101,10 +107,7 @@ const ProductView = ({ tenantSlug, productId }: ProductViewProps) => {
                         <div className="border-t lg:border-t-0 lg:border-l height-full">
                             <div className="flex flex-col gap-4 border-b p-6">
                                 <div className="flex flex-row items-center gap-2">
-                                    <Button variant={"elevated"} className="flex-1 bg-pink-500">
-                                        Add to Cart
-
-                                    </Button>
+                                   <CartButton productId={productId} tenantSlug={tenantSlug}/>
                                     <Button variant={"elevated"} className="bg-pink-100" onClick={() => { }} disabled={false}>
                                         <LinkIcon />
 
