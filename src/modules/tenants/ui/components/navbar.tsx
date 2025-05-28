@@ -1,4 +1,4 @@
-"use client"
+16"use client"
 import { generateTenateURL } from '@/lib/utils'
 import { useTRPC } from '@/trpc/client'
 import { useSuspenseQuery } from '@tanstack/react-query'
