@@ -19,19 +19,19 @@ export const useCartStore = create<CartState>()(
     (set, get) => ({
       tenantCarts: {},
       
-      addProduct: (tenantSlug, productId) =>
-        set((state) => ({
-          tenantCarts: {
-            ...state.tenantCarts,
-            [tenantSlug]: {
-              productIds: [
-                ...(state.tenantCarts[tenantSlug]?.productIds || []),
-                productId
-              ]
+  addProduct: (tenantSlug, productId) => {
+        return set((state) => {
+          const currentCart = state.tenantCarts[tenantSlug] || { productIds: [] };
+          return {
+            tenantCarts: {
+              ...state.tenantCarts,
+              [tenantSlug]: {
+                productIds: [...currentCart.productIds, productId]
+              }
             }
-          }
-        })),
-      
+          };
+              });
+      },
       removeProduct: (tenantSlug, productId) =>
         set((state) => {
           const currentProducts = state.tenantCarts[tenantSlug]?.productIds || [];

@@ -20,7 +20,7 @@ export const UseCart = (tenantSlug:string) => {
       const clearTenantCart=()=>{
         clearCart(tenantSlug)
     }
-  return {
+  return { 
  productIds,
 addProduct:(productId:string)=>addProduct(tenantSlug,productId),
 removeProduct:(productId:string)=>removeProduct(tenantSlug,productId),
