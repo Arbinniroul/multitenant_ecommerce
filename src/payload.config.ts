@@ -40,7 +40,15 @@ export default buildConfig({
     payloadCloudPlugin(),
     multiTenantPlugin({
       collections:{
-        products:{},
+        products:{
+           slug: 'products',
+          access: {
+            read: ({ req }) => {
+              // Temporarily allow all reads for debugging
+              return true
+            }
+          }
+        },
       },
       tenantsArrayField:{
         includeDefaultField:false
@@ -48,6 +56,6 @@ export default buildConfig({
       userHasAccessToAllTenants:(user)=>Boolean(user?.roles?.includes('super-admin')),
 
     })
-    // storage-adapter-placeholder
+    
   ],
 })

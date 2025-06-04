@@ -7,11 +7,11 @@ import Footer from "@/modules/tenants/ui/components/footer"
 interface LayoutProps{
     children?: React.ReactNode,
 
-    params?: Promise<{ slug:string }>
+    params: Promise<{ slug:string }>
 }
 const Layout = async({children,params}:LayoutProps) => {
   
-  const { slug }=await params;
+  const {slug}=await params;
 
   return (
     <div className="min-h-screen flex flex-col bg-[#f4f4f0] w-full"> 

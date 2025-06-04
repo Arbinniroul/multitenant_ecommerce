@@ -107,15 +107,18 @@ const ProductView = ({ tenantSlug, productId }: ProductViewProps) => {
                         <div className="border-t lg:border-t-0 lg:border-l height-full">
                             <div className="flex flex-col gap-4 border-b p-6">
                                 <div className="flex flex-row items-center gap-2">
-                                   <CartButton productId={productId} tenantSlug={tenantSlug}/>
-                                    <Button variant={"elevated"} className="bg-pink-100" onClick={() => { }} disabled={false}>
+                                    
+                         <CartButton productId={productId} isPurchased={data?.isPurchased} tenantSlug={tenantSlug}/>
+                                    
+                                  
+                                    <Button variant={"elevated"}  className="bg-pink-100" onClick={() => { }} disabled={false} >
                                         <LinkIcon />
 
                                     </Button>
 
 
                                 </div>
-                                <p className="text-center font-medium" > {data.refundPolicy==="no-refunds"?(<p>No refunds</p>):`${data.refundPolicy} money back guarentee`}</p>
+                                <p className="text-center font-medium" > {data?.refundPolicy==="no-refunds"?(<p>No refunds</p>):`${data?.refundPolicy} money back guarentee`}</p>
 
 
                             </div>

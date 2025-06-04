@@ -1,32 +1,112 @@
 
 import { baseProcedure, createTRPCRouter } from "@/trpc/init";
 import { z } from "zod";
+import {headers as getHeaders} from "next/headers"
 import {Sort, Where} from "payload"
 import { Category, Media, Tenant } from "@/payload-types";
 import { sortValues } from "../search-params";
 import { DEFAULT_LIMIT } from "@/constants";
+import { TRPCError } from "@trpc/server";
 
 export const productsRouter=createTRPCRouter({
-    getOne:baseProcedure
-    .input(z.object({
-        id:z.string(),
-    }))
+    
+   getOne: baseProcedure
+  .input(z.object({
+    id: z.string(),
+  }))
+  .query(async ({ ctx, input }) => {
+    try {
+   
+      const headers = await getHeaders();
+      const session = await ctx.db.auth({ headers });
+      
+      if (!session.user) {
+        throw new TRPCError({ code: "UNAUTHORIZED" });
+      }
 
-    .query(async({ctx,input})=>{
-        console.log(input.id,"productId")
 
-        const product=await ctx.db.findByID({
-            collection:"products",
-            depth:2,
-            id:input.id
-        })
-        return {
-            ...product,
-            image:product.image as Media | null,
-            cover:product.cover as Media | null,
-            tenant:product.tenant as Tenant & {image:Media | null;},
-        };
-    })
+      const collections = session.permissions?.collections;
+      if (!collections?.products?.read) {
+        throw new TRPCError({ 
+          code: "FORBIDDEN",
+          message: "No read access to products collection"
+        });
+      }
+
+      const product = await ctx.db.findByID({
+        collection: "products",
+        depth: 2,
+        id: input.id
+      }).catch(err => {
+        console.error("DB findById error:", err);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to fetch product",
+          cause: err
+        });
+      });
+
+      if (!product) {
+        throw new TRPCError({ 
+          code: "NOT_FOUND",
+          message: "Product not found"
+        });
+      }
+
+      
+      let isPurchased = false;
+      if (session.user) {
+        try {
+          const ordersData = await ctx.db.find({
+            collection: "orders",
+            pagination: false,
+            limit: 1,
+            where: {
+              and: [
+                { 
+                  products: { 
+                    equals: input.id 
+                  }
+                },
+                {
+                  user: {
+                    equals: session.user.id
+                  }
+                }
+              ]
+            }
+          });
+          isPurchased = !!ordersData.docs[0];
+        } catch (err) {
+          console.error("Order lookup failed:", err);
+          isPurchased = false; 
+        }
+      }
+
+
+      return {
+        ...product,
+        isPurchased,
+        image: product.image as Media | null,
+        cover: product.image as Media | null,
+        tenant: product.tenant as Tenant & { image: Media | null },
+      };
+
+    } catch (err) {
+      console.error("Product query failed:", err);
+      
+
+      if (err instanceof TRPCError) {
+        throw err;
+      }
+      
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Failed to process product request",
+        cause: err
+      });
+    }
+  })
     ,getMany:baseProcedure
 
     .input(z.object({
