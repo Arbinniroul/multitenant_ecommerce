@@ -20,18 +20,7 @@ export const productsRouter=createTRPCRouter({
       const headers = await getHeaders();
       const session = await ctx.db.auth({ headers });
       
-      if (!session.user) {
-        throw new TRPCError({ code: "UNAUTHORIZED" });
-      }
-
-
-      const collections = session.permissions?.collections;
-      if (!collections?.products?.read) {
-        throw new TRPCError({ 
-          code: "FORBIDDEN",
-          message: "No read access to products collection"
-        });
-      }
+   
 
       const product = await ctx.db.findByID({
         collection: "products",

@@ -16,7 +16,7 @@ import Link from 'next/link';
 import React from 'react'
 
 const CheckoutItem = ({isLast,imageURL,name,productURL,tenantURL,tenantName,price,onRemove}:CheckoutItemProps) => {
-    console.log(name,'name')
+    
   return (
     <div className={cn("grid grid-cols-[8.5rem_1fr_auto] gap-4 pr-4 border-b ",isLast && "border-b-0" )}>
         <div className='overflow-hidden border-r'>

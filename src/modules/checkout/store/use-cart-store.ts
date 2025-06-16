@@ -19,19 +19,23 @@ export const useCartStore = create<CartState>()(
     (set) => ({
       tenantCarts: {},
       
-  addProduct: (tenantSlug, productId) => {
-        return set((state) => {
-          const currentCart = state.tenantCarts[tenantSlug] || { productIds: [] };
-          return {
-            tenantCarts: {
-              ...state.tenantCarts,
-              [tenantSlug]: {
-                productIds: [...(currentCart.productIds ?? []), productId]
-               }
-            }
-          };
-              });
-      },
+addProduct: (tenantSlug, productId) => {
+  return set((state) => {
+    const currentCart = state.tenantCarts[tenantSlug] || { productIds: [] };
+   
+    if (currentCart.productIds?.includes(productId)) {
+      return state;
+    }
+    return {
+      tenantCarts: {
+        ...state.tenantCarts,
+        [tenantSlug]: {
+          productIds: [...(currentCart.productIds ?? []), productId]
+        }
+      }
+    };
+  });
+},
       removeProduct: (tenantSlug, productId) =>
         set((state) => {
           const currentProducts = state.tenantCarts[tenantSlug]?.productIds || [];
@@ -62,9 +66,13 @@ export const useCartStore = create<CartState>()(
       
     
     }),
-    {
-      name: "funroad-cart",
-      storage: createJSONStorage(() => localStorage)
-    }
+
+{
+  name: "funroad-cart",
+  storage: createJSONStorage(() => localStorage),
+  migrate: (persistedState,) => { 
+    return persistedState as CartState 
+  }
+}
   )
 );
