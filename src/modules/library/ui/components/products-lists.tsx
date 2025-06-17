@@ -37,7 +37,7 @@ export const ProductList=()=>{
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
             {
                 data?.pages.flatMap((page)=>page.docs).map((product)=>(
-                  <ProductCard id={product.id} key={product.id} name={product.name} imageUrl={product.image?.url } tenantImageUrl={product?.tenant?.image?.url} tenantSlug={product?.tenant.slug}  reviewRating={3} reviewCount={5}  />
+                  <ProductCard id={product.id} key={product.id} name={product.name} imageUrl={product.image?.url } tenantImageUrl={product?.tenant?.image?.url} tenantSlug={product?.tenant.slug}  reviewRating={product.reviewRating} reviewCount={product.reviewCount}  />
                 ))
             }
         </div>

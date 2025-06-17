@@ -43,7 +43,7 @@ export const ProductList=({category,tenantSlug,narrowView}:Props)=>{
         <div className={cn("grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4",narrowView && "lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-3")}>
             {
                 data?.pages.flatMap((page)=>page.docs).map((product)=>(
-                  <ProductCard id={product.id} key={product.id} name={product.name} imageUrl={product.image?.url } tenantImageUrl={product?.tenant?.image?.url} tenantSlug={product?.tenant.slug}  reviewRating={3} reviewCount={5} price={product.price} />
+                  <ProductCard id={product.id} key={product.id} name={product.name} imageUrl={product.image?.url } tenantImageUrl={product?.tenant?.image?.url} tenantSlug={product?.tenant.slug}  reviewRating={product.reviewRating} reviewCount={product.reviewCount} price={product.price} />
                 ))
             }
         </div>
