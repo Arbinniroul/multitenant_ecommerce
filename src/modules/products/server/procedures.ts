@@ -25,7 +25,10 @@ export const productsRouter=createTRPCRouter({
       const product = await ctx.db.findByID({
         collection: "products",
         depth: 2,
-        id: input.id
+        id: input.id,
+           select:{
+                  content:false
+                }
       }).catch(err => {
         console.error("DB findById error:", err);
         throw new TRPCError({
@@ -231,6 +234,9 @@ export const productsRouter=createTRPCRouter({
                 sort,
                 page:input.cursor,
                 limit:input.limit,
+                select:{
+                  content:false
+                }
                
 
 
