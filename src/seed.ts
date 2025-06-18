@@ -1,5 +1,6 @@
 import { getPayload } from "payload"
 import config from "@payload-config"
+import { stripe } from "./lib/stripe";
 const categories = [
     {
       name: "All",
@@ -139,6 +140,7 @@ const categories = [
 
 const seed = async () => {
   const payload = await getPayload({ config });
+  const adminAccount=await stripe.accounts.create({})
 
 
   try {
@@ -147,7 +149,7 @@ const seed = async () => {
       data:{
         name:"admin",
         slug:"admin",
-        stripeAccountId:"admin",
+        stripeAccountId:adminAccount.id,
       }
     })
 
@@ -166,7 +168,7 @@ const seed = async () => {
     });
     console.log("✅ Admin user created");
   } catch (err) {
-    console.log("⚠️ Admin user already exists or error:", err.message);
+    console.log("⚠️ Admin user already exists or error:", err);
   }
 
 
@@ -200,7 +202,9 @@ const seed = async () => {
         }
       }
     } catch (err) {
-      console.error(`❌ Error processing ${category.name}:`, err.message);
+      console.error(`❌ Error processing ${category.name}:`, err
+        
+      );
     }
   }
 };

@@ -9,8 +9,55 @@ import { stripe } from "@/lib/stripe";
 import { ProductMetadata } from "../ui/types";
 
 
+
 export const checkoutRouter=createTRPCRouter({
-    purchase:protectedProcedure
+    verify:protectedProcedure
+    .mutation(async({ctx})=>{
+        const user=await ctx.db.findByID({
+            collection:"users",
+            id:ctx.session.user.id,
+            depth:0
+        })
+        if(!user)
+        {
+            throw new TRPCError({
+                code:"NOT_FOUND",
+                message:"User not found"
+            })
+        }
+        const tenantId=user.tenants?.[0]?.tenant as string; //this is an id 
+        const tenant=await ctx.db.findByID({
+            collection:"tenants",
+            id:tenantId
+        })
+        if(!tenant){
+            throw new TRPCError({code:"NOT_FOUND", message:"Tenant not found"})
+        }
+        if(!tenant.stripeDetailsSubmitted){
+            throw new TRPCError({
+                code:"BAD_REQUEST",
+                message:"Tenant not allowed to sell products"
+
+            })
+        }
+        const accountLink=await stripe.accountLinks.create({
+            account:tenant.stripeAccountId,
+            refresh_url:`${process.env.NEXT_PUBLIC_APP_URL!}/`,
+            return_url:`${process.env.NEXT_PUBLIC_APP_URL!}/`,
+            type:"account_onboarding"
+        })
+
+       if(!accountLink.url){
+        throw new TRPCError({
+            code:"BAD_REQUEST",
+            message:"Failed to create verfication link",
+        })
+       
+
+       }
+        return {url:accountLink.url}
+    })
+    ,purchase:protectedProcedure
     .input(z.object({
         productIds:z.array(z.string().min(1)),
         tenantSlugs:z.string().min(1)
@@ -78,7 +125,8 @@ export const checkoutRouter=createTRPCRouter({
        
 
      }}))
-
+  
+    
      const checkout=await stripe.checkout.sessions.create({
         customer_email:ctx.session.user.email,
         success_url:`${process.env.NEXT_PUBLIC_APP_URL}/tenants/${input.tenantSlugs}/checkout?success=true`,
@@ -90,14 +138,17 @@ export const checkoutRouter=createTRPCRouter({
         },
         
         metadata: { 
-    userId: ctx.session.user.id,
+    userId: ctx.session.user.id ,
     stripeAccountId: tenant.stripeAccountId,
     productIds: JSON.stringify(input.productIds),
     tenantSlug: input.tenantSlugs
   }
 
 
+     },{
+        stripeAccount:tenant.stripeAccountId
      })
+
      if(!checkout.url){
         throw new TRPCError({code:"INTERNAL_SERVER_ERROR",message:"Failed to create checkout session"})
 
