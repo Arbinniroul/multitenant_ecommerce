@@ -9,7 +9,7 @@ import { Suspense } from "react";
 interface LayoutProps{
     children?: React.ReactNode,
 
-    params?: Promise<{slug:string}>
+    params: Promise<{slug:string}>
 }
 const Layout = async({children,params}:LayoutProps) => {
   
