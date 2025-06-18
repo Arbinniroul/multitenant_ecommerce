@@ -5,7 +5,7 @@ import LibraryViews from "@/modules/library/ui/views/library-views"
 import { getQueryClient, trpc } from "@/trpc/server"
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query"
 
-
+export const dynamic = 'force-dynamic';
 const Page = () => {
 
 
