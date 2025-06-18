@@ -10,10 +10,10 @@ import { Poppins } from 'next/font/google'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import {  QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import {   useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
-import { trpc } from '@/trpc/server'
+
 import { useTRPC } from '@/trpc/client'
 const poppins =Poppins({
   subsets:["latin"],

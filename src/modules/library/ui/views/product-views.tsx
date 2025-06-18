@@ -2,8 +2,8 @@
 "use client"
 import { ArrowLeftIcon } from 'lucide-react'
 import Link from 'next/link'
-import React, { Suspense } from 'react'
-import { ProductList, ProductListSkeleton } from '../components/products-lists'
+import React  from 'react'
+
 import { useSuspenseQuery } from '@tanstack/react-query'
 
 import { useTRPC } from '@/trpc/client'

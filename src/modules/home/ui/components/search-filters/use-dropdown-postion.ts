@@ -11,7 +11,7 @@ const getDropDownPostion=()=>{
     const dropDownWidth=240;
 
     let left=rect.left+window.scrollX;
-    let bottom=rect.bottom+window.scrollY;
+
 
     if(left+dropDownWidth>window.innerWidth){
         //Align to right edge 
