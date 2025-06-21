@@ -34,7 +34,7 @@ const purchase=useMutation(trpc.checkout.purchase.mutationOptions({
     },
     onError:(error)=>{if(error.data?.code==="UNAUTHORIZED"){
         queryClient.invalidateQueries(trpc.library.getMany.infiniteQueryFilter())
-        router.push("/library")
+        router.push("/sign-up")
         toast.error(error.message)
     }}
 }))

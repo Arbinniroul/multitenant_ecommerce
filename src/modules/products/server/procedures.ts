@@ -29,7 +29,12 @@ export const productsRouter=createTRPCRouter({
            select:{
                   content:false
                 }
-      }).catch(err => {
+
+      }
+     
+    )
+    
+    .catch(err => {
         console.error("DB findById error:", err);
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
@@ -37,6 +42,9 @@ export const productsRouter=createTRPCRouter({
           cause: err
         });
       });
+       if(product.isArchived){
+        throw new TRPCError({code:"NOT_FOUND",message:"Product not found"})
+      }
 
       if (!product) {
         throw new TRPCError({ 
@@ -152,7 +160,12 @@ export const productsRouter=createTRPCRouter({
     }))
     
     .query(async({ctx,input})=>{
-        const where:Where={}
+        const where:Where={
+          isArchived:{
+            not_equals:true,
+          }
+        }
+
         let sort:Sort="-createdAt"
         if(input.sort=="trending"){
             sort="name"

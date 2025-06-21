@@ -1,6 +1,8 @@
 import { isSuperAdmin } from "@/lib/access";
 import { Tenant } from "@/payload-types";
+
 import { CollectionConfig } from "payload";
+
 
 export const Products:CollectionConfig={
     admin: {
@@ -24,7 +26,7 @@ export const Products:CollectionConfig={
         },
         {
             name:"description",
-            type:'text',
+            type:'richText',
 
 
         },
@@ -61,11 +63,27 @@ export const Products:CollectionConfig={
         },
         {
             name:'content',
-            //TODO:change to rich text
-            type:'textarea',
+            type:'richText',
             admin:{
                 description:"Protected content only visible to customers after purchase. Add product documentation ,downloadabe files ,getting started guides and bonus materials.Supports markdown formatting"
             }
+        },
+             {
+            name:"isArchived",
+            label:"Archive",
+            type:"checkbox",
+             admin:{
+                description:"If checked this product will be archived"
+             }
+        },
+
+             {
+            name:"isPrivate",
+            label:"Private",
+            type:"checkbox",
+             admin:{
+                description:"If checked this product will not be shown on the public storefront"
+             }
         }
 
     ]

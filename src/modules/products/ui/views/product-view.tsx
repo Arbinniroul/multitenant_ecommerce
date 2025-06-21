@@ -12,6 +12,7 @@ import Link from "next/link";
 import { Fragment } from "react";
 import { toast } from "sonner";
 import { useState } from "react";
+import { RichText } from "@payloadcms/richtext-lexical/react";
 
 
 //TODO add real ratings
@@ -26,7 +27,7 @@ const CartButton=dynamic(
 )
 
 
-const ProductView = ({ tenantSlug, productId }: ProductViewProps) => {
+export const ProductView = ({ tenantSlug, productId }: ProductViewProps) => {
     const trpc = useTRPC();
     const[isCopied,setIsCopied]=useState(false);
     const { data } = useSuspenseQuery(trpc.products.getOne.queryOptions({ id: productId }))
@@ -95,7 +96,7 @@ const ProductView = ({ tenantSlug, productId }: ProductViewProps) => {
                             </div>
                             <div className="p-6">
                                 {
-                                    data?.description ? (<p>{data.description}</p>) :
+                                    data?.description ? (<RichText data={data.description}/>) :
                                         <p className="font-medium text-muted-foreground italic">
                                             No description provided
 
@@ -183,5 +184,17 @@ const ProductView = ({ tenantSlug, productId }: ProductViewProps) => {
         </div>
     )
 }
+export const ProductViewSkeleton=()=>{
+    return(
+          <div className="px-4 lg:px-12 py-10 ">
+            <div className="border rounded-sm bg-white overflow-hidden">
+                <div className="relative aspect-[3.9] border-b ">
+                    <Image src={"/placeholder.png"} alt="cover" fill className="object-cover" />
 
-export default ProductView
+                </div>
+                </div>
+                </div>
+    )
+}
+
+

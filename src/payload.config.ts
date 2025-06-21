@@ -1,7 +1,7 @@
 // storage-adapter-import-placeholder
 import { mongooseAdapter } from '@payloadcms/db-mongodb'
 import { payloadCloudPlugin } from '@payloadcms/payload-cloud'
-import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import { lexicalEditor, UploadFeature } from '@payloadcms/richtext-lexical'
 import path from 'path'
 import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
@@ -17,6 +17,7 @@ import { multiTenantPlugin } from '@payloadcms/plugin-multi-tenant'
 import { Orders } from './collections/Orders'
 import { Reviews } from './collections/Reviews'
 import { isSuperAdmin } from './lib/access'
+
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
@@ -27,12 +28,30 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
     components:{
-      beforeNavLinks:['@/components/stripe-verify#StripeVerify']
+      beforeNavLinks:['./components/stripe-verify#StripeVerify']
     }
   },
   collections: [Users,Media,Categories,Products,Tags,Tenants,Orders,Reviews],
+
   cookiePrefix:"funroad",
-  editor: lexicalEditor(),
+  editor: lexicalEditor({
+                  features:({defaultFeatures})=>[
+                      ...defaultFeatures,
+                      UploadFeature({
+                          collections:{
+                              media:{
+                                  fields:[
+                                      {
+                                          name:"name",
+                                          type:"text"
+                                      }
+                                  ]
+                              }
+                          }
+                      })
+  
+                  ]
+              }),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
