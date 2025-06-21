@@ -17,6 +17,8 @@ import { multiTenantPlugin } from '@payloadcms/plugin-multi-tenant'
 import { Orders } from './collections/Orders'
 import { Reviews } from './collections/Reviews'
 import { isSuperAdmin } from './lib/access'
+import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
+
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -73,6 +75,16 @@ export default buildConfig({
       },
       userHasAccessToAllTenants:(user)=>isSuperAdmin(user),
 
+    }),
+    vercelBlobStorage({
+      enabled:true,
+      collections:{
+        media:true,
+       
+
+
+      },
+      token:process.env.BLOB_READ_WRITE_TOKEN
     })
     
   ],
