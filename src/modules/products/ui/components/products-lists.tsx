@@ -66,7 +66,7 @@ export const ProductList=({category,tenantSlug,narrowView}:Props)=>{
 }
 export const ProductListSkeleton=({narrowView}:Props)=>{
     return(
-        <div className={cn("grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4",narrowView && "lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-3")}>
+        <div className={cn("grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4",!narrowView && "lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-3")}>
             {Array.from({ length: 4 }).map((_, index) => (
                 <div key={index} className=" rounded-md bg-white overflow-hidden h-full animate-pulse">
                     <div className="relative aspect-square bg-gray-200"></div>
